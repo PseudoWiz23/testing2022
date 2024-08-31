@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wise Financial Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.1.9/Recharts.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        select { margin-bottom: 20px; padding: 5px; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script>
+        const { useState } = React;
+        const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } = Recharts;
+
+        const data = [
+            { quarter: 'Q1 FY2023', activeCustomers: 4997, crossBorderVolume: 24.4, customerBalances: 7.7, crossBorderRevenue: 149.5 },
+            { quarter: 'Q2 FY2023', activeCustomers: 5484, crossBorderVolume: 27.0, customerBalances: 9.2, crossBorderRevenue: 171.0 },
+            { quarter: 'Q3 FY2023', activeCustomers: 5793, crossBorderVolume: 26.4, customerBalances: 10.1, crossBorderRevenue: 181.3 },
+            { quarter: 'Q4 FY2023', activeCustomers: 6125, crossBorderVolume: 26.7, customerBalances: 10.7, crossBorderRevenue: 177.7 },
+            { quarter: 'Q1 FY2024', activeCustomers: 6670, crossBorderVolume: 28.2, customerBalances: 11.5, crossBorderRevenue: 187.9 },
+            { quarter: 'Q2 FY2024', activeCustomers: 7232, crossBorderVolume: 29.2, customerBalances: 12.3, crossBorderRevenue: 196.5 },
+            { quarter: 'Q3 FY2024', activeCustomers: 7512, crossBorderVolume: 30.6, customerBalances: 12.9, crossBorderRevenue: 206.2 },
+            { quarter: 'Q4 FY2024', activeCustomers: 7911, crossBorderVolume: 30.6, customerBalances: 13.3, crossBorderRevenue: 204.6 },
+            { quarter: 'Q1 FY2025', activeCustomers: 8374, crossBorderVolume: 33.2, customerBalances: 14.1, crossBorderRevenue: 211.2 },
+        ];
+
+        const metrics = [
+            { value: 'activeCustomers', label: 'Active Customers (thousand)' },
+            { value: 'crossBorderVolume', label: 'Cross Border Volume (£ billion)' },
+            { value: 'customerBalances', label: 'Customer Balances (£ billion)' },
+            { value: 'crossBorderRevenue', label: 'Cross Border Revenue (£ million)' },
+        ];
+
+        function Dashboard() {
+            const [selectedMetric, setSelectedMetric] = useState('activeCustomers');
+
+            return React.createElement('div', { className: 'container' },
+                React.createElement('h2', { className: 'text-2xl font-bold mb-4' }, 'Wise Financial Dashboard'),
+                React.createElement('select', {
+                    className: 'block w-full p-2 border rounded',
+                    value: selectedMetric,
+                    onChange: (e) => setSelectedMetric(e.target.value)
+                }, metrics.map(metric =>
+                    React.createElement('option', { key: metric.value, value: metric.value }, metric.label)
+                )),
+                React.createElement(ResponsiveContainer, { width: '100%', height: 400 },
+                    React.createElement(LineChart, { data: data },
+                        React.createElement(CartesianGrid, { strokeDasharray: '3 3' }),
+                        React.createElement(XAxis, { dataKey: 'quarter' }),
+                        React.createElement(YAxis),
+                        React.createElement(Tooltip),
+                        React.createElement(Legend),
+                        React.createElement(Line, { type: 'monotone', dataKey: selectedMetric, stroke: '#8884d8', activeDot: { r: 8 } })
+                    )
+                )
+            );
+        }
+
+        ReactDOM.render(React.createElement(Dashboard), document.getElementById('root'));
+    </script>
+</body>
+</html>
